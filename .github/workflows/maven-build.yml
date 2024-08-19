@@ -1,41 +1,62 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
 name: Java CI with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ '17' ]
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK ${{matrix.java}}
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{matrix.java}}
-          distribution: 'adopt'
-          cache: maven
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Build with Maven Wrapper
-        run:
-          mvn clean spring-javaformat:apply
-          mvn clean install -DskipTests
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
 
-      - name: SonarQube Scan
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed for PR decoration
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # SonarQube authentication token
-        run: ./mvnw sonar:sonar \
-          -Dsonar.projectKey=maven-java \
-          -Dsonar.host.url=https://b9fd04991336.ngrok.app \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+    - name: Build with Maven Wrapper
+      run: |
+        ./mvnw clean spring-javaformat:apply
+        ./mvnw clean install -DskipTests
+
+    - name: Run tests with Maven
+      run: ./mvnw test
+
+    - name: Generate JaCoCo report
+      run: ./mvnw jacoco:report
+
+    - name: Upload JaCoCo code coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: jacoco-report
+        path: target/site/jacoco
+
+    - name: Run SonarQube analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: ./mvnw sonar:sonar -Dsonar.projectKey=org.springframework.samples:spring-petclinic
+
+    - name: Package project as JAR
+      run: ./mvnw package -DskipTests
+
+    - name: Upload JAR artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: spring-petclinic-jar
+        path: target/*.jar
+
+    - name: Publish JAR to GitHub Packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: spring-petclinic-package
+        path: target/*.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
