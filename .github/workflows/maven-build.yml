@@ -27,7 +27,9 @@ jobs:
           cache: maven
 
       - name: Build with Maven Wrapper
-        run: mvn clean install -DskipTests
+        run:
+          mvn clean spring-javaformat:apply
+          mvn clean install -DskipTests
 
       - name: SonarQube Scan
         env:
