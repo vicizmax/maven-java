@@ -39,15 +39,15 @@ public class PetClinicApplication {
 	}
 
 	public static void main(String[] args) {
-        SpringApplication.run(PetClinicApplication.class, args);
-        printStartupMessage();
-    }
+		SpringApplication.run(PetClinicApplication.class, args);
+		printStartupMessage();
+	}
 
-    /**
-     * Prints a startup message to the console. Here we go! Here we go again......
-     */
-    private static void printStartupMessage() {
-        System.out.println("PetClinic Application has started successfully!");
-    }
+	/**
+	 * Prints a startup message to the console. Here we go! Here we go again......
+	 */
+	private static void printStartupMessage() {
+		System.out.println("PetClinic Application has started successfully!");
+	}
 
 }
