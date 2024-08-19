@@ -18,11 +18,11 @@ package org.springframework.samples.petclinic;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+// import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportRuntimeHints;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+// import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import java.util.Locale;
+// import java.util.Locale;
 
 /**
  * PetClinic Spring Boot Application.
@@ -44,6 +44,7 @@ public class PetClinicApplication {
     }
 
     /**
+     * Prints a startup message to the console. Here we go! Here we go again......
      */
     private static void printStartupMessage() {
         System.out.println("PetClinic Application has started successfully!");
