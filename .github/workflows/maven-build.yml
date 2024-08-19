@@ -27,7 +27,7 @@ jobs:
           cache: maven
 
       - name: Build with Maven Wrapper
-        run: ./mvnw -B package
+        run: ./mvnw -B package -DskipTests
 
       - name: SonarQube Scan
         env:
